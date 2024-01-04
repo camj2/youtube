@@ -1,0 +1,135 @@
+#!/bin/sh
+
+TMP="${XDG_RUNTIME_DIR:-/tmp}/youtube_download"
+
+env_check() {
+  if ! command -v yt-dlp > /dev/null 2>&1; then
+    die 127 "program 'yt-dlp' not installed"
+  fi
+
+  if ! command -v ffmpeg > /dev/null 2>&1; then
+    die 127 "program 'ffmpeg' not installed"
+  fi
+
+  if [ $# -eq 0 ]; then
+    die 1 "source required"
+  fi
+
+  if [ -e "$TMP" ]; then
+    die 1 "directory '$TMP' already exists"
+  fi
+}
+
+video() {
+  ARG=$#
+
+  while [ $# -ne 0 ]; do
+    printf "file %s.mkv\n" $# >> "$TMP/ffmpeg"
+
+    yt-dlp --abort-on-error --ignore-config --no-cache-dir \
+      --no-playlist --no-part --no-mtime --quiet --progress \
+      --paths "home:$TMP" --output "$#.%(ext)s" --merge-output-format mkv \
+      --format bestvideo+bestaudio --format-sort vcodec:h264,acodec:opus \
+      --sponsorblock-api https://sponsor.ajay.app --sponsorblock-remove all "$1" || return
+
+    shift
+  done
+
+  OUTPUT=$(date +%Y%m%d_%H%M%S).mp4
+
+  if [ "$ARG" -eq 1 ]; then
+    ffmpeg -i "$TMP/1.mkv" -c copy "$TMP/$OUTPUT" -loglevel error || return
+  else
+    ffmpeg -f concat -i "$TMP/ffmpeg" -c copy "$TMP/$OUTPUT" -loglevel error || return
+  fi
+}
+
+audio() {
+  ARG=$#
+
+  while [ $# -ne 0 ]; do
+    printf "file %s.webm\n" $# >> "$TMP/ffmpeg"
+
+    yt-dlp --abort-on-error --ignore-config --no-cache-dir \
+      --no-playlist --no-part --no-mtime --quiet --progress \
+      --paths "home:$TMP" --output "$#.%(ext)s" --format 'bestaudio[acodec=opus][ext=webm]' \
+      --sponsorblock-api https://sponsor.ajay.app --sponsorblock-remove all "$1" || return
+
+    shift
+  done
+
+  OUTPUT=$(date +%Y%m%d_%H%M%S).mp3
+
+  if [ "$ARG" -eq 1 ]; then
+    ffmpeg -i "$TMP/1.webm" "$TMP/$OUTPUT" -loglevel error || return
+  else
+    ffmpeg -f concat -i "$TMP/ffmpeg" "$TMP/$OUTPUT" -loglevel error || return
+  fi
+}
+
+pre() {
+  trap 'rm -rf "$TMP"; exit 1' HUP INT TERM
+
+  install -d -m 700 "$TMP"
+}
+
+post() {
+  code=$?
+
+  if [ "$code" -ne 0 ]; then
+    rm -rf "$TMP"
+
+    exit "$code"
+  fi
+
+  mv -f "$TMP/$OUTPUT" ./
+
+  rm -rf "$TMP"
+
+  trap - HUP INT TERM
+}
+
+die() {
+  printf "youtube: %s\n" "$2" 1>&2
+
+  exit "$1"
+}
+
+RST='\033[0;00m'
+GRN='\033[0;32m'
+GLD='\033[0;33m'
+
+usage() {
+  printf "%b\n" "${GLD}USAGE${RST}:"
+  printf "%s\n" "    youtube [SUBCOMMAND] [SOURCE] ..."
+  printf "\n"
+  printf "%b\n" "${GLD}SUBCOMMAND${RST}:"
+  printf "%b\n" "    ${GRN}v${RST}, ${GRN}video${RST}    Download as .mp4 using h264 and opus"
+  printf "%b\n" "    ${GRN}a${RST}, ${GRN}audio${RST}    Download as .mp3 using opus"
+}
+
+case $1 in
+  v | video)
+    shift
+    env_check "$@"
+    pre
+    video "$@"
+    post
+    ;;
+
+  a | audio)
+    shift
+    env_check "$@"
+    pre
+    audio "$@"
+    post
+    ;;
+
+  h | -h | help | --help | "")
+    usage
+    ;;
+
+  *)
+    die 1 "invalid option -- '$1'"
+    ;;
+esac
