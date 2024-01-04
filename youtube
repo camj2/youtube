@@ -21,8 +21,6 @@ env_check() {
 }
 
 video() {
-  ARG=$#
-
   while [ $# -ne 0 ]; do
     printf "file %s.mkv\n" $# >> "$TMP/ffmpeg"
 
@@ -36,16 +34,10 @@ video() {
 
   OUTPUT=$(date +%Y%m%d_%H%M%S).mp4
 
-  if [ "$ARG" -eq 1 ]; then
-    ffmpeg -i "$TMP/1.mkv" -c copy "$TMP/$OUTPUT" -loglevel error || return
-  else
-    ffmpeg -f concat -i "$TMP/ffmpeg" -c copy "$TMP/$OUTPUT" -loglevel error || return
-  fi
+  ffmpeg -f concat -i "$TMP/ffmpeg" -c copy "$TMP/$OUTPUT" -loglevel error || return
 }
 
 audio() {
-  ARG=$#
-
   while [ $# -ne 0 ]; do
     printf "file %s.webm\n" $# >> "$TMP/ffmpeg"
 
@@ -59,11 +51,7 @@ audio() {
 
   OUTPUT=$(date +%Y%m%d_%H%M%S).mp3
 
-  if [ "$ARG" -eq 1 ]; then
-    ffmpeg -i "$TMP/1.webm" "$TMP/$OUTPUT" -loglevel error || return
-  else
-    ffmpeg -f concat -i "$TMP/ffmpeg" "$TMP/$OUTPUT" -loglevel error || return
-  fi
+  ffmpeg -f concat -i "$TMP/ffmpeg" "$TMP/$OUTPUT" -loglevel error || return
 }
 
 pre() {
