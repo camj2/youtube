@@ -3,12 +3,12 @@
 TMP="${XDG_RUNTIME_DIR:-/tmp}/youtube_download"
 
 check() {
-  if ! command -v yt-dlp > /dev/null 2>&1; then
-    die 127 "program 'yt-dlp' not installed"
+  if ! command -v yt-dlp > /dev/null; then
+    die 127 "yt-dlp not installed"
   fi
 
-  if ! command -v ffmpeg > /dev/null 2>&1; then
-    die 127 "program 'ffmpeg' not installed"
+  if ! command -v ffmpeg > /dev/null; then
+    die 127 "ffmpeg not installed"
   fi
 
   if [ $# -eq 0 ]; then
@@ -16,7 +16,7 @@ check() {
   fi
 
   if [ -e "$TMP" ]; then
-    die 1 "directory '$TMP' already exists"
+    die 1 "directory '$TMP': already exists"
   fi
 }
 
@@ -113,6 +113,6 @@ case $1 in
     ;;
 
   *)
-    die 1 "invalid option -- '$1'"
+    die 1 "unrecognized command '$1'"
     ;;
 esac
