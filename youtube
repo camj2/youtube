@@ -35,6 +35,8 @@ video() {
   OUTPUT=$(date +%Y%m%d_%H%M%S).mp4
 
   ffmpeg -f concat -i "$TMP/ffmpeg" -c copy "$TMP/$OUTPUT" -loglevel error || return
+
+  mv -f "$TMP/$OUTPUT" ./
 }
 
 audio() {
@@ -52,6 +54,8 @@ audio() {
   OUTPUT=$(date +%Y%m%d_%H%M%S).mp3
 
   ffmpeg -f concat -i "$TMP/ffmpeg" "$TMP/$OUTPUT" -loglevel error || return
+
+  mv -f "$TMP/$OUTPUT" ./
 }
 
 pre() {
@@ -61,19 +65,11 @@ pre() {
 }
 
 post() {
-  code=$?
-
-  if [ "$code" -ne 0 ]; then
-    rm -rf "$TMP"
-
-    exit "$code"
-  fi
-
-  mv -f "$TMP/$OUTPUT" ./
+  ret=$?
 
   rm -rf "$TMP"
 
-  trap - HUP INT TERM
+  exit "$ret"
 }
 
 die() {
