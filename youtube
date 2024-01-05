@@ -2,7 +2,7 @@
 
 TMP="${XDG_RUNTIME_DIR:-/tmp}/youtube_download"
 
-env_check() {
+check() {
   if ! command -v yt-dlp > /dev/null 2>&1; then
     die 127 "program 'yt-dlp' not installed"
   fi
@@ -21,7 +21,7 @@ env_check() {
 }
 
 video() {
-  while [ $# -ne 0 ]; do
+  while [ $# -gt 0 ]; do
     printf "file %s.mkv\n" $# >> "$TMP/ffmpeg"
 
     yt-dlp --ignore-config --no-cache-dir --no-playlist \
@@ -38,7 +38,7 @@ video() {
 }
 
 audio() {
-  while [ $# -ne 0 ]; do
+  while [ $# -gt 0 ]; do
     printf "file %s.webm\n" $# >> "$TMP/ffmpeg"
 
     yt-dlp --ignore-config --no-cache-dir --no-playlist \
@@ -98,7 +98,7 @@ usage() {
 case $1 in
   v | video)
     shift
-    env_check "$@"
+    check "$@"
     pre
     video "$@"
     post
@@ -106,7 +106,7 @@ case $1 in
 
   a | audio)
     shift
-    env_check "$@"
+    check "$@"
     pre
     audio "$@"
     post
