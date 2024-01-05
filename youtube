@@ -12,7 +12,7 @@ check() {
   fi
 
   if [ $# -eq 0 ]; then
-    die 1 "source required"
+    die 1 "URL required"
   fi
 
   if [ -e "$TMP" ]; then
@@ -80,15 +80,15 @@ die() {
 
 RST='\033[0;00m'
 GRN='\033[0;32m'
-GLD='\033[0;33m'
+YLW='\033[0;33m'
 
 usage() {
-  printf "%b\n" "${GLD}USAGE${RST}:"
-  printf "%s\n" "    youtube [SUBCOMMAND] [SOURCE] ..."
+  printf "%b\n" "${YLW}USAGE${RST}:"
+  printf "%s\n" "    youtube [SUBCOMMAND] [URL] ..."
   printf "\n"
-  printf "%b\n" "${GLD}SUBCOMMAND${RST}:"
-  printf "%b\n" "    ${GRN}v${RST}, ${GRN}video${RST}    Download as .mp4 using h264 and opus"
-  printf "%b\n" "    ${GRN}a${RST}, ${GRN}audio${RST}    Download as .mp3 using opus"
+  printf "%b\n" "${YLW}SUBCOMMANDS${RST}:"
+  printf "%b\n" "    ${GRN}v${RST}, ${GRN}video${RST}    Download .mp4 using h264 and opus"
+  printf "%b\n" "    ${GRN}a${RST}, ${GRN}audio${RST}    Download .mp3 using opus"
 }
 
 case $1 in

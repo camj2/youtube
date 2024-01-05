@@ -19,11 +19,11 @@ make install
 
 ```
 USAGE:
-    youtube [SUBCOMMAND] [SOURCE] ...
+    youtube [SUBCOMMAND] [URL] ...
 
-SUBCOMMAND:
-    v, video    Download as .mp4 using h264 and opus
-    a, audio    Download as .mp3 using opus
+SUBCOMMANDS:
+    v, video    Download .mp4 using h264 and opus
+    a, audio    Download .mp3 using opus
 ```
 
 ### Examples
