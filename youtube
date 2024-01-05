@@ -22,7 +22,7 @@ check() {
 
 video() {
   while [ $# -gt 0 ]; do
-    printf "file %s.mkv\n" $# >> "$TMP/ffmpeg"
+    printf "file %s.mkv\n" $# >> "$TMP/0"
 
     yt-dlp --ignore-config --no-cache-dir --no-playlist \
       --quiet --progress --paths "$TMP" --output $# --merge-output-format mkv \
@@ -34,14 +34,14 @@ video() {
 
   OUTPUT=$(date -u +%Y%m%d_%H%M%S).mp4
 
-  ffmpeg -f concat -i "$TMP/ffmpeg" -c copy "$TMP/$OUTPUT" -loglevel error || return
+  ffmpeg -f concat -i "$TMP/0" -c copy "$TMP/$OUTPUT" -loglevel error || return
 
   mv -f "$TMP/$OUTPUT" ./
 }
 
 audio() {
   while [ $# -gt 0 ]; do
-    printf "file %s\n" $# >> "$TMP/ffmpeg"
+    printf "file %s\n" $# >> "$TMP/0"
 
     yt-dlp --ignore-config --no-cache-dir --no-playlist \
       --quiet --progress --paths "$TMP" --output $# \
@@ -53,7 +53,7 @@ audio() {
 
   OUTPUT=$(date -u +%Y%m%d_%H%M%S).mp3
 
-  ffmpeg -f concat -i "$TMP/ffmpeg" "$TMP/$OUTPUT" -loglevel error || return
+  ffmpeg -f concat -i "$TMP/0" "$TMP/$OUTPUT" -loglevel error || return
 
   mv -f "$TMP/$OUTPUT" ./
 }
