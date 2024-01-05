@@ -32,7 +32,7 @@ video() {
     shift
   done
 
-  OUTPUT=$(date +%Y%m%d_%H%M%S).mp4
+  OUTPUT=$(date -u +%Y%m%d_%H%M%S).mp4
 
   ffmpeg -f concat -i "$TMP/ffmpeg" -c copy "$TMP/$OUTPUT" -loglevel error || return
 
@@ -51,7 +51,7 @@ audio() {
     shift
   done
 
-  OUTPUT=$(date +%Y%m%d_%H%M%S).mp3
+  OUTPUT=$(date -u +%Y%m%d_%H%M%S).mp3
 
   ffmpeg -f concat -i "$TMP/ffmpeg" "$TMP/$OUTPUT" -loglevel error || return
 
