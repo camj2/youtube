@@ -1,6 +1,6 @@
 # YouTube download script
 
-[yt-dlp](https://github.com/yt-dlp/yt-dlp) wrapper script used to download video/audio files from YouTube. If multiple URLs are provided they will be merged together into a single file.
+[yt-dlp](https://github.com/yt-dlp/yt-dlp) wrapper script used to download video/audio files from YouTube. If multiple URLs are provided, they will be merged together into a single file.
 
 ## Installation
 
@@ -30,7 +30,7 @@ SUBCOMMANDS:
 
 ### Download location
 
-Files are first downloaded to a temporary directory before being processed by `ffmpeg`. This directory is created in [`XDG_RUNTIME_DIR`](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) or `/tmp` if unset. This can be changed by editing the `TMP` variable [found at the top](https://gitlab.com/camj/youtube/-/blob/master/youtube?ref_type=heads#L3) of the script.
+Files are downloaded to a temporary directory which is then processed by `ffmpeg`. This directory is created using [`XDG_RUNTIME_DIR`](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) or `/tmp` if unset. This can be changed by editing the `TMP` variable [found at the top](https://gitlab.com/camj/youtube/-/blob/master/youtube?ref_type=heads#L3) of the script.
 
 This could be changed to, for example, `TMP=youtube_download`.
 
@@ -38,4 +38,4 @@ This could be changed to, for example, `TMP=youtube_download`.
 
 When downloading and merging multiple video files, the timestamps of the resulting video file can cause problems with media players such as [vlc](https://www.videolan.org/). This would require a re-encode to fix.
 
-Merging the downloaded video and audio files to a [Matroska](https://www.matroska.org/index.html) (`.mkv`) container and then remuxing to `.mp4` solves the issue.
+Merging the downloaded video and audio files to a [Matroska](https://www.matroska.org/index.html) (`.mkv`) container before remuxing to `.mp4` solves the issue.
