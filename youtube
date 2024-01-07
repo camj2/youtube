@@ -41,11 +41,11 @@ video() {
 
 audio() {
   while [ $# -gt 0 ]; do
-    printf "file %s\n" $# >> "$TMP/0"
+    printf "file %s.webm\n" $# >> "$TMP/0"
 
     yt-dlp --ignore-config --no-cache-dir --no-playlist \
-      --quiet --progress --paths "$TMP" --output $# \
-      --format bestaudio --format-sort acodec:opus \
+      --quiet --progress --paths "$TMP" --output "${#}.%(ext)s" \
+      --format 'bestaudio[ext=webm]' --format-sort acodec:opus \
       --sponsorblock-remove all "$1" || return
 
     shift
