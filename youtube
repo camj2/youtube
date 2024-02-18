@@ -4,19 +4,19 @@ TMP="${XDG_RUNTIME_DIR:-/tmp}/youtube_download"
 
 check() {
   if ! command -v yt-dlp > /dev/null; then
-    die 127 "yt-dlp not installed"
+    die "yt-dlp not installed"
   fi
 
   if ! command -v ffmpeg > /dev/null; then
-    die 127 "ffmpeg not installed"
+    die "ffmpeg not installed"
   fi
 
   if [ $# -eq 0 ]; then
-    die 1 "URL required"
+    die "URL required"
   fi
 
   if [ -e "$TMP" ]; then
-    die 1 "directory '$TMP': already exists"
+    die "directory '$TMP': already exists"
   fi
 }
 
@@ -69,13 +69,12 @@ post() {
 
   rm -rf "$TMP"
 
-  exit "$ret"
+  exit $ret
 }
 
 die() {
-  printf "youtube: %s\n" "$2" 1>&2
-
-  exit "$1"
+  printf "youtube: %s\n" "$*" >&2
+  exit 1
 }
 
 RST='\033[0;00m'
@@ -108,11 +107,7 @@ case $1 in
     post
     ;;
 
-  h | -h | help | --help | "")
-    usage
-    ;;
-
   *)
-    die 1 "unrecognized command '$1'"
+    usage >&2
     ;;
 esac
