@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TMP="${XDG_RUNTIME_DIR:-/tmp}/youtube_download"
+TMP="${XDG_RUNTIME_DIR:-/tmp}/youtube"
 
 check() {
   if ! command -v yt-dlp > /dev/null; then
