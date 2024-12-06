@@ -36,7 +36,7 @@ video() {
 
   ffmpeg -f concat -i "$TMP/0" -c copy "$TMP/$OUTPUT" -loglevel error || return
 
-  mv -f "$TMP/$OUTPUT" ./
+  mv -n "$TMP/$OUTPUT" ./
 }
 
 audio() {
@@ -55,7 +55,7 @@ audio() {
 
   ffmpeg -f concat -i "$TMP/0" "$TMP/$OUTPUT" -loglevel error || return
 
-  mv -f "$TMP/$OUTPUT" ./
+  mv -n "$TMP/$OUTPUT" ./
 }
 
 pre() {
